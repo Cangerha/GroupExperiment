@@ -103,6 +103,16 @@ END
 
 CALL InsertOrderDetails ();
 
+-- 根据生成的订单更新客户总消费额
+UPDATE customers
+SET
+    c_total_spent = (
+        SELECT SUM(o_sum)
+        FROM orders
+        WHERE
+            orders.c_id = customers.c_id
+    );
+
 -- 根据生成的订单明细计算订单总金额
 UPDATE orders
 SET
@@ -111,4 +121,4 @@ SET
         FROM order_details
         WHERE
             order_details.o_id = orders.o_id
-    )
+    );
