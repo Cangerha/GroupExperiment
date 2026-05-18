@@ -17,3 +17,5 @@ BEGIN
         total_trade AS '当日营业额';
 END //
 DELIMITER ;
+
+
