@@ -19,24 +19,3 @@ BEGIN
 END //
 
 DELIMITER ;
-
-
-
-
-
-
--- 测试数据
--- 商户 10000001 的订单
-INSERT INTO orders (o_id, c_id, s_id, o_sum, o_time)
-VALUES 
-    (21, '10000001', '10000001', 150.00, NOW()),
-    (22, '10000002', '10000001', 200.00, NOW()),
-    (23, '10000003', '10000001', 180.00, NOW());
-
-
-
-
--- 查询商户 10000001 的当日营业额
-SET @total_trade = 0;
-CALL GetShopDailySales('10000001', @total_trade);
-SELECT @total_trade;  
