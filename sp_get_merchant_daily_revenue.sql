@@ -1,5 +1,4 @@
 ELIMITER //
-
 CREATE PROCEDURE GetShopDailySales(
     IN shop_id VARCHAR(20),           -- IN：商户ID
     OUT total_trade DECIMAL(10, 2)    -- OUT：当日营业额
@@ -17,5 +16,4 @@ BEGIN
         CURDATE() AS '查询日期',
         total_trade AS '当日营业额';
 END //
-
 DELIMITER ;
