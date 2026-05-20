@@ -5,8 +5,7 @@ CREATE TABLE customers (
     c_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '客户ID',
     c_name VARCHAR(50) COMMENT '客户姓名',
     c_phone VARCHAR(20) COMMENT '客户电话',
-    c_address VARCHAR(200) COMMENT '地址',
-    c_total_spent DECIMAL(10, 2) DEFAULT 0.00 COMMENT '累积消费'
+    c_address VARCHAR(200) COMMENT '地址'
 ) COMMENT '客户表';
 
 -- 2. 商家表
@@ -43,7 +42,6 @@ CREATE TABLE order_details (
     o_id INT NOT NULL COMMENT '订单ID',
     f_id INT NOT NULL COMMENT '菜品ID',
     od_quantity INT NOT NULL CHECK (od_quantity > 0) COMMENT '数量',
-    od_subtotal DECIMAL(10, 2) NOT NULL COMMENT '小计金额',
     CONSTRAINT order_details_fk_o_id FOREIGN KEY (o_id) REFERENCES orders (o_id) ON DELETE CASCADE,
     CONSTRAINT order_details_fk_f_id FOREIGN KEY (f_id) REFERENCES foods (f_id) ON DELETE CASCADE
 ) COMMENT '订单明细表';

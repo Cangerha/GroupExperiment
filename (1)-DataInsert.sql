@@ -19,6 +19,8 @@ END
 
 CALL InsertCustomers ();
 
+DROP PROCEDURE InsertCustomers;
+
 -- 为shops表插入20行数据
 CREATE PROCEDURE InsertShops()
 BEGIN
@@ -37,6 +39,8 @@ BEGIN
 END
 
 CALL InsertShops ();
+
+DROP PROCEDURE InsertShops;
 
 -- 为foods表插入20行数据
 CREATE PROCEDURE InsertFoods()
@@ -57,23 +61,7 @@ END
 
 CALL InsertFoods ();
 
--- 为orders表插入20行的id，客户id，与商户id
-CREATE PROCEDURE InsertOrders()
-BEGIN
-    DECLARE i INT;
-    SET i = 1;
-    WHILE i <= 20 DO
-        INSERT INTO orders (o_id,c_id,s_id)
-        VALUES (
-            LPAD(i, 2, '0'),
-            CONCAT('100000',LPAD(ROUND(RAND() * 19 + 1), 2, '0')),
-            CONCAT('100000',LPAD(ROUND(RAND() * 19 + 1), 2, '0'))
-        );
-        SET i = i + 1;
-    END WHILE;
-END
-
-CALL InsertOrders ();
+DROP PROCEDURE InsertFoods;
 
 -- 为order_details表插入20行数据
 CREATE PROCEDURE InsertOrderDetails()
@@ -89,13 +77,12 @@ BEGIN
     WHILE i <= 20 DO
         SET food_id=ROUND(RAND() * 19 + 1);
         SET quantity=ROUND(RAND() * 2 + 1);
-        INSERT INTO order_details (od_id,o_id,f_id,od_quantity,od_subtotal)
+        INSERT INTO order_details (od_id,o_id,f_id,od_quantity)
         VALUES (
             i,
             i,
             food_id,
-            quantity,
-            quantity*(SELECT f_price FROM foods WHERE f_id=food_id)
+            quantity
         );
         SET i = i + 1;
     END WHILE;
@@ -103,21 +90,40 @@ END
 
 CALL InsertOrderDetails ();
 
--- 根据生成的订单更新客户总消费额
-UPDATE customers
-SET
-    c_total_spent = (
-        SELECT SUM(o_sum)
-        FROM orders
-        WHERE
-            orders.c_id = customers.c_id
-    );
+DROP PROCEDURE InsertOrderDetails;
+
+-- 为orders表生成20行的id，客户id，与商户id
+CREATE PROCEDURE InsertOrders()
+BEGIN
+    DECLARE i INT;
+    SET i = 1;
+    WHILE i <= 20 DO
+        INSERT INTO orders (o_id,c_id,s_id)
+        VALUES (
+            LPAD(i, 2, '0'),
+            CONCAT('100000',LPAD(ROUND(RAND() * 19 + 1), 2, '0')),
+            (SELECT s_id FROM foods WHERE f_id=(SELECT f_id FROM order_details WHERE o_id=i))
+        );
+        SET i = i + 1;
+    END WHILE;
+END
+
+CALL InsertOrders ();
+
+DROP PROCEDURE InsertOrders;
 
 -- 根据生成的订单明细计算订单总金额
 UPDATE orders
 SET
     o_sum = (
-        SELECT SUM(od_subtotal)
+        SELECT SUM(
+                od_quantity * (
+                    SELECT f_price
+                    FROM foods
+                    WHERE
+                        foods.f_id = order_details.f_id
+                )
+            )
         FROM order_details
         WHERE
             order_details.o_id = orders.o_id
