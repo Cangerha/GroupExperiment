@@ -23,6 +23,8 @@ BEGIN
 END
 
 -- 测试
+-- 对存在的商户进行测试
 CALL CreateTestFoods ('10000001');
 
+-- 对不存在的商户进行测试
 CALL CreateTestFoods ('11110000');
