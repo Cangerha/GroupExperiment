@@ -46,11 +46,13 @@ BEGIN
 END
 
 -- 测试
+-- 查看维护日志表
 SELECT * FROM order_maint_log;
 
+-- 给最新的订单交易额加10000
 UPDATE orders
 SET
-    o_sum = 10000.00
+    o_sum = o_sum + 10000.00
 WHERE
     o_id = (
         SELECT MAX(o_id)
@@ -60,4 +62,18 @@ WHERE
             ) _
     );
 
+-- 给最新的订单交易额减10000
+UPDATE orders
+SET
+    o_sum = o_sum - 10000.00
+WHERE
+    o_id = (
+        SELECT MAX(o_id)
+        FROM (
+                SELECT o_id
+                FROM orders
+            ) _
+    );
+
+-- 查看维护日志表
 SELECT * FROM order_maint_log;
