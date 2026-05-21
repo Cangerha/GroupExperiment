@@ -1,6 +1,7 @@
 -- Active: 1775733622997@@127.0.0.1@3306@experiment
 
-DELIMITER / /
+DELIMITER /
+/
 CREATE PROCEDURE GetShopDailySales (
     IN shop_id VARCHAR(20), -- IN：商户ID
     OUT total_trade DECIMAL(10, 2) -- OUT：当日营业额
@@ -15,9 +16,36 @@ WHERE
 -- 显示信息EXTRA
 SELECT shop_id AS '商户ID', CURDATE() AS '查询日期', total_trade AS '当日营业额';
 
-END / / DELIMITER;
+END / /
+/
+/
+
+DELIMITER;
 
 -- 测试
+-- 测试数据
+-- 商户 10000001 的订单
+INSERT INTO
+    orders (c_id, s_id, o_sum, o_time)
+VALUES (
+        '10000001',
+        '10000001',
+        150.00,
+        NOW()
+    ),
+    (
+        '10000002',
+        '10000001',
+        200.00,
+        NOW()
+    ),
+    (
+        '10000003',
+        '10000001',
+        180.00,
+        NOW()
+    );
+
 SET @total_trade = 0.00;
 
 CALL GetShopDailySales ('10000001', @total_trade);
