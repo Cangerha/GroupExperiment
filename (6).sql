@@ -1,6 +1,6 @@
 -- Active: 1775733622997@@127.0.0.1@3306@experiment
 
-ELIMITER / /
+DELIMITER / /
 CREATE PROCEDURE GetShopDailySales (
     IN shop_id VARCHAR(20), -- IN：商户ID
     OUT total_trade DECIMAL(10, 2) -- OUT：当日营业额
