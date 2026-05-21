@@ -30,3 +30,21 @@ WHERE
 INSERT INTO
     orders (o_sum, c_id, s_id)
 VALUES (1.00, 10000001, 10000001);
+
+-- 删除该测试订单
+DELETE FROM orders
+WHERE
+    o_id = (
+        SELECT MAX(o_id)
+        FROM (
+                SELECT o_id
+                FROM orders
+            ) _
+    );
+
+-- 复原客户消费额
+UPDATE customers
+SET
+    c_total_spent = c_total_spent -10001
+WHERE
+    c_id = 10000001;
